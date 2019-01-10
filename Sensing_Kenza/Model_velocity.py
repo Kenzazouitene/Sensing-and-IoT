@@ -14,6 +14,7 @@ from pymongo import MongoClient
 from pprint import pprint
 from statsmodels.tsa.arima_model import ARIMA
 
+## This code allows the model to access the database
 resorts = {
     'Brevent-Flegere': '45.934,6.839',
     'Balme': '46.042,6.952',
@@ -334,15 +335,9 @@ df['precip']= (index_type[3][1:len(index_type[3])])
 df['wind']= (index_type[4][1:len(index_type[4])])
 
 
-
-
-print(df.dtypes)
-print(df)
-
-
+#export the relevant columns from dataframe to dictionnary
 export_df = df['velocities']
 timestamps_velocities_updated = export_df.to_dict()
-
 
 export_df2 = df['altitudes']
 timestamps_altitudes_updated = export_df2.to_dict()
@@ -377,6 +372,7 @@ timestamps_altitudes_updated2={}
 for i in range(0,len(velocities_updated)):
     timestamps_altitudes_updated2[time_stamps_updated2[i]]=altitudes_updated[i]
 
+##as well as to print to my user the data extracted from part 1
                
 class User:
 
@@ -479,10 +475,6 @@ df2 = df.loc[df['velocities'] > 0]
 
 
 
-print(df2)
-
-
-
 dhu = df2['temp']
 dhj=[]
 
@@ -493,34 +485,16 @@ for i in dhu:
 a = np.array(dhj, dtype=np.float32)
 print (a)
 
-#print(df.dtype)
-
-
-#df = df.convert_objects(convert_numeric=True).dtype
-#print(df.dtype)
-#df = df.infer_objects(0).dtypes
-#print(df.dtypes)
-
-
-
-
-
-b = np.arange(1, 18, 0.5)
 
 model = ARIMA(endog=df2['velocities'], order=(1,1,1), exog=dhj)
 #model = ARIMA(endog=df['velocities'], order=(5,1,0), exog=df.iloc[:, 1:5])
 model_fit = model.fit()
 print(model_fit.summary())
 
-#forecast = model_fit.forecast()[0]
-
-#model_fit.plot_diagnostics(figsize=(16, 8))
-#plt.show()
-
 forecast = model_fit.predict(start=5, end=10)
-#forecast = model_fit.forecast(steps=7)[0]
+
 
 
 print(forecast)
 
-#model.plot_predict(h=10, oos_data=b, past_values=100, figsize=(15,5))
+
